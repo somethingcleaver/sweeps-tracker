@@ -3,22 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Sweeps & Bonus EV Tracker</title>
+  <title>Daily Bonus Tracker & High-EV Wash Calculator</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { background-color: #0b0f19; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     .card { background-color: #131b2e; border: 1px solid #1e293b; }
     .accent-btn { background-color: #10b981; color: #042f2e; font-weight: 600; }
     .accent-btn:hover { background-color: #059669; }
+    .badge-chip { background-color: #7c2d12; color: #fdba74; border: 1px solid #9a3412; }
+    .badge-sweeps { background-color: #065f46; color: #6ee7b7; border: 1px solid #047857; }
+    .badge-app { background-color: #1e3a8a; color: #93c5fd; border: 1px solid #1d4ed8; }
   </style>
 </head>
 <body class="min-h-screen p-4 sm:p-8">
-  <div class="max-w-5xl mx-auto space-y-8">
+  <div class="max-w-6xl mx-auto space-y-8">
     
     <!-- Header -->
     <header class="text-center space-y-2">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Free Daily Bonus Tracker & EV Calculator</h1>
-      <p class="text-slate-400 text-sm sm:text-base">Track your daily sweeps streaks, calculate bonus conversion math, and wash credits with optimal RTP.</p>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Daily Bonus Tracker & EV Calculator</h1>
+      <p class="text-slate-400 text-sm sm:text-base">Track your daily streaks, wash $100 free chips and sweeps coins with optimal low-variance RTP, and calculate expected cashout value.</p>
     </header>
 
     <!-- Top Grid: Daily Summary & EV Calculator -->
@@ -33,7 +36,7 @@
             </h2>
             <button onclick="resetDailyChecklist()" class="text-xs text-slate-400 hover:text-white underline">Reset All</button>
           </div>
-          <p class="text-sm text-slate-400 mb-6">Check off platforms as you collect free daily login credits. Progress saves automatically in your browser.</p>
+          <p class="text-sm text-slate-400 mb-6">Check off platforms as you collect free daily login credits and bonus chips. Progress automatically saves in your browser storage.</p>
           
           <div class="space-y-2 mb-6">
             <div class="flex justify-between text-sm font-semibold">
@@ -45,7 +48,7 @@
             </div>
           </div>
         </div>
-        <p class="text-xs text-slate-500">Tip: Most sweepstakes reset every 24 hours from your last login time.</p>
+        <p class="text-xs text-slate-500">Tip: Check in daily to maintain maximum login multipliers and free coin streaks.</p>
       </div>
 
       <!-- Card 2: Bonus Wash EV Calculator -->
@@ -56,7 +59,7 @@
         <div class="grid grid-cols-3 gap-3">
           <div>
             <label class="block text-xs text-slate-400 mb-1">Bonus ($)</label>
-            <input type="number" id="calcBonus" value="25" oninput="calculateEV()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+            <input type="number" id="calcBonus" value="100" oninput="calculateEV()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-emerald-500">
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">Playthrough</label>
@@ -64,38 +67,39 @@
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">Game RTP (%)</label>
-            <input type="number" id="calcRtp" value="99.5" step="0.1" oninput="calculateEV()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+            <input type="number" id="calcRtp" value="97.5" step="0.1" oninput="calculateEV()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-emerald-500">
           </div>
         </div>
 
         <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 grid grid-cols-2 gap-4 text-center">
           <div>
             <div class="text-xs text-slate-400">Total Wager Req.</div>
-            <div id="wagerRequired" class="text-lg font-bold text-white mt-1">$25.00</div>
+            <div id="wagerRequired" class="text-lg font-bold text-white mt-1">$100.00</div>
           </div>
           <div>
             <div class="text-xs text-slate-400">Expected Retained Cash</div>
-            <div id="expectedValue" class="text-lg font-bold text-emerald-400 mt-1">$24.88</div>
+            <div id="expectedValue" class="text-lg font-bold text-emerald-400 mt-1">$97.50</div>
           </div>
         </div>
-        <p class="text-xs text-slate-500 text-center">Using mathematically optimal strategy on high RTP table games or slots.</p>
+        <p class="text-xs text-slate-500 text-center">Using mathematically optimal strategy on low-volatility high-RTP slots and table games.</p>
       </div>
 
     </div>
 
-    <!-- Casino & Sweepstakes Directory -->
+    <!-- Casino & App Directory -->
     <div class="card rounded-2xl p-6 shadow-xl space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 class="text-xl font-bold text-white">Casinos & Daily Wash Directory</h2>
-          <p class="text-xs text-slate-400">Filter by platform type or search for specific wash games.</p>
+          <h2 class="text-xl font-bold text-white">Active Verified Bonuses Directory (26 Platforms)</h2>
+          <p class="text-xs text-slate-400">Filter by category or search by platform name or recommended game.</p>
         </div>
         <div class="flex items-center gap-3">
-          <input type="text" id="searchInput" oninput="renderTable()" placeholder="Search casino or game..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+          <input type="text" id="searchInput" oninput="renderTable()" placeholder="Search platform or game..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500">
           <select id="typeFilter" onchange="renderTable()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500">
-            <option value="All">All Types</option>
-            <option value="Sweepstakes">Sweepstakes Only</option>
-            <option value="Real Money">Real Money Only</option>
+            <option value="All">All Categories</option>
+            <option value="Online Casino">Online Casinos ($100 Chips)</option>
+            <option value="Sweepstakes">Sweepstakes Platforms</option>
+            <option value="Sweeps App">Mobile Apps</option>
           </select>
         </div>
       </div>
@@ -104,10 +108,10 @@
         <table class="w-full text-left text-sm">
           <thead class="bg-slate-900 text-slate-400 text-xs uppercase tracking-wider">
             <tr>
-              <th class="p-3">Claim</th>
-              <th class="p-3">Casino</th>
+              <th class="p-3">Claimed</th>
+              <th class="p-3">Platform</th>
               <th class="p-3">Bonus Offer</th>
-              <th class="p-3">Promo Code</th>
+              <th class="p-3">Promo / Invite Code</th>
               <th class="p-3">Best Low-Variance Wash Game</th>
               <th class="p-3 text-right">Action</th>
             </tr>
@@ -123,27 +127,225 @@
 
   <script>
     const casinoData = [
-      { name: "Stake.us", type: "Sweepstakes", bonus: "250K GC + $25 Stake Cash", code: "Auto-Claim", game: "Plinko (Low) / Blackjack (99.0%)", link: "https://stake.us/?c=YOUR_CODE" },
-      { name: "Chumba Casino", type: "Sweepstakes", bonus: "2M GC + 2 Free SC", code: "Auto-Claim", game: "Jacks or Better Video Poker (99.5%)", link: "https://chumbacasino.com/?ref=YOUR_CODE" },
-      { name: "Pulsz Casino", type: "Sweepstakes", bonus: "5,000 GC + 2.35 Free SC", code: "Auto-Claim", game: "Classic Blackjack (99.6%)", link: "https://pulsz.com/?invited_by=YOUR_CODE" },
-      { name: "High 5 Casino", type: "Sweepstakes", bonus: "250 GC + 5 Free SC", code: "Auto-Claim", game: "Triple Double Da Vinci Diamonds (96.0%)", link: "https://high5casino.com/gc?ad=YOUR_CODE" },
-      { name: "McLuck Casino", type: "Sweepstakes", bonus: "7,500 GC + 2.5 Free SC", code: "Auto-Claim", game: "Black Wolf 2 / Coin Strike (95.6%)", link: "https://mcluck.com/?r=YOUR_CODE" },
-      { name: "WOW Vegas", type: "Sweepstakes", bonus: "250K WOW Coins + 5 SC", code: "Auto-Claim", game: "Wilds of Fortune (96.3%)", link: "https://wowvegas.com/?raf=YOUR_CODE" },
-      { name: "Fortune Coins", type: "Sweepstakes", bonus: "630K FC + 1,000 FC ($10)", code: "Auto-Claim", game: "Emily's Treasure (96.0%)", link: "https://fortunecoins.com/register?c=YOUR_CODE" },
-      { name: "Crown Coins", type: "Sweepstakes", bonus: "100K CC + 2 Free SC", code: "Auto-Claim", game: "Joker's Jewels (96.5%)", link: "https://crowncoinscasino.com/?r=YOUR_CODE" },
-      { name: "Hello Millions", type: "Sweepstakes", bonus: "15,000 GC + 2.5 Free SC", code: "Auto-Claim", game: "Sugar Rush (96.5%)", link: "https://hellomillions.com/?r=YOUR_CODE" },
-      { name: "Fliff Social", type: "Sweepstakes", bonus: "5,000 Coins + $1 SC Daily", code: "Auto-Claim", game: "Heavy Favorites -500 Straight Bets (98%)", link: "https://getfliff.com/ref/YOUR_CODE" },
-      { name: "DraftKings", type: "Real Money", bonus: "Play $5 Get $50 Credits", code: "Auto-Claim", game: "DraftKings Blackjack (99.6%)", link: "https://casino.draftkings.com/r/YOUR_CODE" },
-      { name: "FanDuel Casino", type: "Real Money", bonus: "$1,000 Play It Again + $20", code: "Auto-Claim", game: "Blood Suckers Slot (98.0%)", link: "https://casino.fanduel.com/r/YOUR_CODE" },
-      { name: "BetMGM Casino", type: "Real Money", bonus: "$25 No Deposit + $1K Match", code: "BONUSMGM", game: "Texas Hold'em Bonus Poker (99.4%)", link: "https://betmgm.com/r/YOUR_CODE" },
-      { name: "BetRivers", type: "Real Money", bonus: "$500 1x Playthrough Match", code: "SPORTS", game: "Single Deck Blackjack (99.5%)", link: "https://betrivers.com/r/YOUR_CODE" },
-      { name: "Caesars Palace", type: "Real Money", bonus: "$10 Free + $2,500 Match", code: "FINDER2500", game: "French Roulette / Baccarat (98.6%)", link: "https://caesars.com/r/YOUR_CODE" }
+      // --- Top Sweepstakes ---
+      { 
+        name: "Crown Coins Casino", 
+        type: "Sweepstakes", 
+        bonus: "100,000 CC + 2 Free SC", 
+        code: "Auto-Applied", 
+        game: "Joker's Jewels (96.5% RTP)", 
+        link: "https://crowncoinscasino.com/?utm_campaign=701b363c-97c1-44c0-956c-da00d5ae39a2&utm_source=friends" 
+      },
+      { 
+        name: "Zula Casino", 
+        type: "Sweepstakes", 
+        bonus: "100,000 GC + $10 Free SC", 
+        code: "Auto-Applied", 
+        game: "Hot Triple Sevens (96.0% RTP)", 
+        link: "https://www.zulacasino.com/signup/f85154fe-d59e-4e88-9ef2-7c8b4e4720ac" 
+      },
+
+      // --- $100 Free Chip Online Casinos ---
+      { 
+        name: "Royal Ace Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Caesar's Empire / Achilles (97.0% RTP)", 
+        link: "https://www.royalacecasino.com/signup/?affid=68442" 
+      },
+      { 
+        name: "Palace of Chance", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Cash Bandits 3 / Achilles (97.0% RTP)", 
+        link: "https://www.palaceofchance.com/signup/?affid=56265" 
+      },
+      { 
+        name: "Planet 7 Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Caesar's Empire / PayDirt! (97.5% RTP)", 
+        link: "https://www.planet7casino.com/signup/?affid=33996" 
+      },
+      { 
+        name: "Club Player Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Suit 'Em Up 21 / Caesar's Empire", 
+        link: "https://www.clubplayercasino.com/signup/?affid=54375" 
+      },
+      { 
+        name: "Captain Jack Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Classic Blackjack / Achilles Slot", 
+        link: "https://www.captainjackcasino.com/signup/?affid=35240" 
+      },
+      { 
+        name: "Slots of Vegas", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Sweet 16 / Caesar's Empire (97.0% RTP)", 
+        link: "https://www.slotsofvegas.com/signup/?affid=78266" 
+      },
+      { 
+        name: "Ruby Slots", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Gemtopia / Achilles (97.0% RTP)", 
+        link: "https://www.rubyslots.com/signup/?affid=42313" 
+      },
+      { 
+        name: "Silver Oak Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Caesar's Empire (97.5% RTP)", 
+        link: "https://www.silveroakcasino.com/signup/?affid=35232" 
+      },
+      { 
+        name: "Mega Medusa Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Medusa's Millions (Low Risk Reels)", 
+        link: "https://www.playmegamedusa.com/signup?affTag=R2xBcUd0Z1c3SFI5R0lhQzYwZkRuQT09" 
+      },
+      { 
+        name: "Raging Bull Slots", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Bulls & Bears / Caesar's Empire", 
+        link: "https://www.ragingbullslots.com/signup/?affid=26061" 
+      },
+      { 
+        name: "Dreams Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Cash Bandits / Classic Blackjack", 
+        link: "https://www.mydreamscasino.com/signup/?affid=56653" 
+      },
+      { 
+        name: "Cool Cat Casino", 
+        type: "Online Casino", 
+        bonus: "$100 Free Chip (No Deposit)", 
+        code: "Auto-Applied", 
+        game: "Purrfect Pets / Achilles (97.0% RTP)", 
+        link: "https://www.coolcat-casino.com/signup/?affid=115207" 
+      },
+
+      // --- Mobile Sweeps Apps ---
+      { 
+        name: "Lucky Rush Casino App", 
+        type: "Sweeps App", 
+        bonus: "$7 Free Cash on Download", 
+        code: "4124218", 
+        game: "Classic 777 Slots (Low Volatility)", 
+        link: "https://dl.srappledl.com/?channel_id=101001&iv_code=4124218" 
+      },
+      { 
+        name: "Spin Fever: Gold Rush App", 
+        type: "Sweeps App", 
+        bonus: "5,000,000 Free Coins + Daily Wheel", 
+        code: "Auto-Bound", 
+        game: "Classic Gold Rush Reels (Low Variance)", 
+        link: "https://xslotsgaming.com/us_share/index.html?eyJjb2RlIjoiTWpRNE5qUTNOelk9IiwicCI6IlNwaW4gRmV2ZXIgR29sZCBSdXNoIiwiaSI6Imlvc1NwaW5GZXZlci5wbmciLCJwbmFtZSI6ImNvbS5mbG90YWFtLmRpbGlnZSJ9" 
+      },
+      { 
+        name: "Buffalo Fortune App", 
+        type: "Sweeps App", 
+        bonus: "Free Starter Coins + Daily Streak Spins", 
+        code: "24943612", 
+        game: "Buffalo Classic Reels (Low Risk)", 
+        link: "https://xslotsgaming.com/us_share/index.html?eyJjb2RlIjoiTWpRNU5ETTJNVEk9IiwicCI6IkJ1ZmZhbG8gRm9ydHVuZSIsImkiOiJpb3NCdWZmYWxvRm9ydHVuZS5wbmciLCJwbmFtZSI6ImNvbS54aWxvb2xrLmJtY2wifQ==" 
+      },
+      { 
+        name: "Jackpot Dance App", 
+        type: "Sweeps App", 
+        bonus: "Free Daily SC & Welcome Coins", 
+        code: "K7YAKYM6", 
+        game: "777 Classic Hold & Win (Low Variance)", 
+        link: "https://share.jackpotdance.com/index.html?code=K7YAKYM6&api=83890944&env=3" 
+      },
+      { 
+        name: "Jackpot Express App", 
+        type: "Sweeps App", 
+        bonus: "Free Starter Credits & Refills", 
+        code: "1K8663", 
+        game: "Express Line 3-Reel Slots", 
+        link: "https://playvegas.cc?code=1K8663" 
+      },
+      { 
+        name: "Jackpot Hoard App", 
+        type: "Sweeps App", 
+        bonus: "Free Starting Coins & Gifts", 
+        code: "6UEH9V", 
+        game: "Diamond Classic Slots (Low Volatility)", 
+        link: "https://go117.cc?code=6UEH9V" 
+      },
+      { 
+        name: "Jackpot Winning App", 
+        type: "Sweeps App", 
+        bonus: "Freeplay Credits + Lucky Wheel", 
+        code: "5O8O59", 
+        game: "Miner / Classic Fruit Slots", 
+        link: "https://jpclub.cc?code=5O8O59" 
+      },
+      { 
+        name: "King Slots App", 
+        type: "Sweeps App", 
+        bonus: "10,000 Free Coins + 2h Refills", 
+        code: "60022814", 
+        game: "Classic Vegas Fruit Slots", 
+        link: "https://share.king7slots.com/60022814" 
+      },
+      { 
+        name: "Coastal Vacations App", 
+        type: "Sweeps App", 
+        bonus: "Free Starter Coins + Spin Wheel", 
+        code: "Z43NYF", 
+        game: "Classic 777 Spin Games", 
+        link: "https://res.buddyfunny.com/web/jumptoapp3.html?invite_code=Z43NYF" 
+      },
+      { 
+        name: "Hit Fortune Casino Slots", 
+        type: "Sweeps App", 
+        bonus: "Free Registration Credits & Streaks", 
+        code: "5KCTQ5", 
+        game: "Classic 777 Slots (Low Volatility)", 
+        link: "https://res.buddyfunny.com/web/jumptoapp3.html?invite_code=5KCTQ5" 
+      },
+      { 
+        name: "Luklok Casino App", 
+        type: "Sweeps App", 
+        bonus: "Free Welcome Chips + Bonus Wheel", 
+        code: "MqZpzP", 
+        game: "Classic 21 / Low Risk Reels", 
+        link: "https://apps.apple.com/us/app/luklok-casino-slots-games/id6795426789" 
+      },
+      { 
+        name: "Cinder Casino App", 
+        type: "Sweeps App", 
+        bonus: "Welcome Free Credits + Daily Reload", 
+        code: "SET89BJH", 
+        game: "Classic Blackjack / Low Risk Slots", 
+        link: "https://apps.apple.com/search?term=Cinder+Casino" 
+      }
     ];
 
     function calculateEV() {
       const bonus = parseFloat(document.getElementById('calcBonus').value) || 0;
       const rollover = parseFloat(document.getElementById('calcRollover').value) || 1;
-      const rtp = parseFloat(document.getElementById('calcRtp').value) || 99;
+      const rtp = parseFloat(document.getElementById('calcRtp').value) || 97.5;
       
       const totalWager = bonus * rollover;
       const houseEdge = (100 - rtp) / 100;
@@ -176,6 +378,18 @@
       document.getElementById('progressBar').style.width = `${percent}%`;
     }
 
+    function copyCode(code, elId) {
+      navigator.clipboard.writeText(code);
+      const el = document.getElementById(elId);
+      const original = el.innerText;
+      el.innerText = "COPIED!";
+      el.classList.add("text-emerald-400");
+      setTimeout(() => {
+        el.innerText = original;
+        el.classList.remove("text-emerald-400");
+      }, 1500);
+    }
+
     function renderTable() {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const filter = document.getElementById('typeFilter').value;
@@ -184,21 +398,36 @@
 
       casinoData.forEach((item, idx) => {
         if (filter !== "All" && item.type !== filter) return;
-        if (query && !item.name.toLowerCase().includes(query) && !item.game.toLowerCase().includes(query)) return;
+        if (query && !item.name.toLowerCase().includes(query) && !item.game.toLowerCase().includes(query) && !item.bonus.toLowerCase().includes(query)) return;
 
         const isClaimed = localStorage.getItem(`claim_${idx}`) === "true";
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-900/50 transition-colors";
+
+        let badgeClass = "badge-sweeps";
+        if (item.type === "Online Casino") badgeClass = "badge-chip";
+        if (item.type === "Sweeps App") badgeClass = "badge-app";
+
+        const isClickableCode = item.code !== "Auto-Applied" && item.code !== "Auto-Bound";
+        const codeElement = isClickableCode
+          ? `<span id="code_${idx}" onclick="copyCode('${item.code}', 'code_${idx}')" title="Click to copy code" class="cursor-pointer bg-slate-800 px-2 py-1 rounded hover:bg-slate-700 font-mono text-xs text-amber-400 font-bold border border-slate-700 select-all">${item.code} 📋</span>`
+          : `<span class="font-mono text-xs text-slate-400">${item.code}</span>`;
+
         tr.innerHTML = `
           <td class="p-3">
             <input type="checkbox" ${isClaimed ? 'checked' : ''} onchange="toggleClaim(${idx})" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
           </td>
-          <td class="p-3 font-semibold text-white">${item.name} <span class="text-xs block text-slate-500 font-normal">${item.type}</span></td>
-          <td class="p-3 text-slate-300">${item.bonus}</td>
-          <td class="p-3 font-mono text-xs text-amber-400">${item.code}</td>
+          <td class="p-3 font-semibold text-white">
+            <div class="flex items-center gap-2">
+              ${item.name}
+            </div>
+            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${badgeClass} inline-block mt-0.5">${item.type}</span>
+          </td>
+          <td class="p-3 text-slate-200 font-medium">${item.bonus}</td>
+          <td class="p-3">${codeElement}</td>
           <td class="p-3 text-xs text-slate-400">${item.game}</td>
           <td class="p-3 text-right">
-            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="inline-block text-xs px-3 py-1.5 rounded-lg accent-btn">Claim</a>
+            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="inline-block text-xs px-3 py-1.5 rounded-lg accent-btn shadow-sm transition-transform active:scale-95">Claim Bonus</a>
           </td>
         `;
         tbody.appendChild(tr);
@@ -206,7 +435,6 @@
       updateProgress();
     }
 
-    // Init
     window.onload = () => {
       calculateEV();
       renderTable();
