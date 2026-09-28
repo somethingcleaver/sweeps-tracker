@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Sweeps & Bonus EV Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0b0f19; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .card { background-color: #131b2e; border: 1px solid #1e293b; }
+    .accent-btn { background-color: #10b981; color: #042f2e; font-weight: 600; }
+    .accent-btn:hover { background-color: #059669; }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8">
+  <div class="max-w-5xl mx-auto space-y-8">
+    
+    <!-- Header -->
+    <header class="text-center space-y-2">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Free Daily Bonus Tracker & EV Calculator</h1>
+      <p class="text-slate-400 text-sm sm:text-base">Track your daily sweeps streaks, calculate bonus conversion math, and wash credits with optimal RTP.</p>
+    </header>
+
+    <!-- Top Grid: Daily Summary & EV Calculator -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Card 1: Daily Tracker Progress -->
+      <div class="card rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>📅</span> Daily Claim Status
+            </h2>
+            <button onclick="resetDailyChecklist()" class="text-xs text-slate-400 hover:text-white underline">Reset All</button>
+          </div>
+          <p class="text-sm text-slate-400 mb-6">Check off platforms as you collect free daily login credits. Progress saves automatically in your browser.</p>
+          
+          <div class="space-y-2 mb-6">
+            <div class="flex justify-between text-sm font-semibold">
+              <span id="trackerStats">0 of 0 Claimed</span>
+              <span id="trackerPercent" class="text-emerald-400">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-3">
+              <div id="progressBar" class="bg-emerald-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500">Tip: Most sweepstakes reset every 24 hours from your last login time.</p>
+      </div>
+
+      <!-- Card 2: Bonus Wash EV Calculator -->
+      <div class="card rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <span>🧮</span> Bonus Wash EV Calculator
+        </h2>
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Bonus ($)</label>
+            <input type="number" id="calcBonus" value="25" oninput="calculateEV()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Playthrough</label>
+            <input type="number" id="calcRollover" value="1" step="0.5" oninput="calculateEV()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Game RTP (%)</label>
+            <input type="number" id="calcRtp" value="99.5" step="0.1" oninput="calculateEV()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 grid grid-cols-2 gap-4 text-center">
+          <div>
+            <div class="text-xs text-slate-400">Total Wager Req.</div>
+            <div id="wagerRequired" class="text-lg font-bold text-white mt-1">$25.00</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400">Expected Retained Cash</div>
+            <div id="expectedValue" class="text-lg font-bold text-emerald-400 mt-1">$24.88</div>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 text-center">Using mathematically optimal strategy on high RTP table games or slots.</p>
+      </div>
+
+    </div>
+
+    <!-- Casino & Sweepstakes Directory -->
+    <div class="card rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Casinos & Daily Wash Directory</h2>
+          <p class="text-xs text-slate-400">Filter by platform type or search for specific wash games.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="text" id="searchInput" oninput="renderTable()" placeholder="Search casino or game..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+          <select id="typeFilter" onchange="renderTable()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+            <option value="All">All Types</option>
+            <option value="Sweepstakes">Sweepstakes Only</option>
+            <option value="Real Money">Real Money Only</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-900 text-slate-400 text-xs uppercase tracking-wider">
+            <tr>
+              <th class="p-3">Claim</th>
+              <th class="p-3">Casino</th>
+              <th class="p-3">Bonus Offer</th>
+              <th class="p-3">Promo Code</th>
+              <th class="p-3">Best Low-Variance Wash Game</th>
+              <th class="p-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="casinoTableBody" class="divide-y divide-slate-800">
+            <!-- Dynamically Rendered -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const casinoData = [
+      { name: "Stake.us", type: "Sweepstakes", bonus: "250K GC + $25 Stake Cash", code: "Auto-Claim", game: "Plinko (Low) / Blackjack (99.0%)", link: "https://stake.us/?c=YOUR_CODE" },
+      { name: "Chumba Casino", type: "Sweepstakes", bonus: "2M GC + 2 Free SC", code: "Auto-Claim", game: "Jacks or Better Video Poker (99.5%)", link: "https://chumbacasino.com/?ref=YOUR_CODE" },
+      { name: "Pulsz Casino", type: "Sweepstakes", bonus: "5,000 GC + 2.35 Free SC", code: "Auto-Claim", game: "Classic Blackjack (99.6%)", link: "https://pulsz.com/?invited_by=YOUR_CODE" },
+      { name: "High 5 Casino", type: "Sweepstakes", bonus: "250 GC + 5 Free SC", code: "Auto-Claim", game: "Triple Double Da Vinci Diamonds (96.0%)", link: "https://high5casino.com/gc?ad=YOUR_CODE" },
+      { name: "McLuck Casino", type: "Sweepstakes", bonus: "7,500 GC + 2.5 Free SC", code: "Auto-Claim", game: "Black Wolf 2 / Coin Strike (95.6%)", link: "https://mcluck.com/?r=YOUR_CODE" },
+      { name: "WOW Vegas", type: "Sweepstakes", bonus: "250K WOW Coins + 5 SC", code: "Auto-Claim", game: "Wilds of Fortune (96.3%)", link: "https://wowvegas.com/?raf=YOUR_CODE" },
+      { name: "Fortune Coins", type: "Sweepstakes", bonus: "630K FC + 1,000 FC ($10)", code: "Auto-Claim", game: "Emily's Treasure (96.0%)", link: "https://fortunecoins.com/register?c=YOUR_CODE" },
+      { name: "Crown Coins", type: "Sweepstakes", bonus: "100K CC + 2 Free SC", code: "Auto-Claim", game: "Joker's Jewels (96.5%)", link: "https://crowncoinscasino.com/?r=YOUR_CODE" },
+      { name: "Hello Millions", type: "Sweepstakes", bonus: "15,000 GC + 2.5 Free SC", code: "Auto-Claim", game: "Sugar Rush (96.5%)", link: "https://hellomillions.com/?r=YOUR_CODE" },
+      { name: "Fliff Social", type: "Sweepstakes", bonus: "5,000 Coins + $1 SC Daily", code: "Auto-Claim", game: "Heavy Favorites -500 Straight Bets (98%)", link: "https://getfliff.com/ref/YOUR_CODE" },
+      { name: "DraftKings", type: "Real Money", bonus: "Play $5 Get $50 Credits", code: "Auto-Claim", game: "DraftKings Blackjack (99.6%)", link: "https://casino.draftkings.com/r/YOUR_CODE" },
+      { name: "FanDuel Casino", type: "Real Money", bonus: "$1,000 Play It Again + $20", code: "Auto-Claim", game: "Blood Suckers Slot (98.0%)", link: "https://casino.fanduel.com/r/YOUR_CODE" },
+      { name: "BetMGM Casino", type: "Real Money", bonus: "$25 No Deposit + $1K Match", code: "BONUSMGM", game: "Texas Hold'em Bonus Poker (99.4%)", link: "https://betmgm.com/r/YOUR_CODE" },
+      { name: "BetRivers", type: "Real Money", bonus: "$500 1x Playthrough Match", code: "SPORTS", game: "Single Deck Blackjack (99.5%)", link: "https://betrivers.com/r/YOUR_CODE" },
+      { name: "Caesars Palace", type: "Real Money", bonus: "$10 Free + $2,500 Match", code: "FINDER2500", game: "French Roulette / Baccarat (98.6%)", link: "https://caesars.com/r/YOUR_CODE" }
+    ];
+
+    function calculateEV() {
+      const bonus = parseFloat(document.getElementById('calcBonus').value) || 0;
+      const rollover = parseFloat(document.getElementById('calcRollover').value) || 1;
+      const rtp = parseFloat(document.getElementById('calcRtp').value) || 99;
+      
+      const totalWager = bonus * rollover;
+      const houseEdge = (100 - rtp) / 100;
+      const expectedRetained = Math.max(0, bonus - (totalWager * houseEdge));
+
+      document.getElementById('wagerRequired').innerText = '$' + totalWager.toFixed(2);
+      document.getElementById('expectedValue').innerText = '$' + expectedRetained.toFixed(2);
+    }
+
+    function toggleClaim(index) {
+      const key = `claim_${index}`;
+      const current = localStorage.getItem(key) === "true";
+      localStorage.setItem(key, (!current).toString());
+      updateProgress();
+    }
+
+    function resetDailyChecklist() {
+      casinoData.forEach((_, idx) => localStorage.removeItem(`claim_${idx}`));
+      renderTable();
+    }
+
+    function updateProgress() {
+      let claimedCount = 0;
+      casinoData.forEach((_, idx) => {
+        if (localStorage.getItem(`claim_${idx}`) === "true") claimedCount++;
+      });
+      const percent = Math.round((claimedCount / casinoData.length) * 100);
+      document.getElementById('trackerStats').innerText = `${claimedCount} of ${casinoData.length} Claimed`;
+      document.getElementById('trackerPercent').innerText = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+
+    function renderTable() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filter = document.getElementById('typeFilter').value;
+      const tbody = document.getElementById('casinoTableBody');
+      tbody.innerHTML = "";
+
+      casinoData.forEach((item, idx) => {
+        if (filter !== "All" && item.type !== filter) return;
+        if (query && !item.name.toLowerCase().includes(query) && !item.game.toLowerCase().includes(query)) return;
+
+        const isClaimed = localStorage.getItem(`claim_${idx}`) === "true";
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/50 transition-colors";
+        tr.innerHTML = `
+          <td class="p-3">
+            <input type="checkbox" ${isClaimed ? 'checked' : ''} onchange="toggleClaim(${idx})" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+          </td>
+          <td class="p-3 font-semibold text-white">${item.name} <span class="text-xs block text-slate-500 font-normal">${item.type}</span></td>
+          <td class="p-3 text-slate-300">${item.bonus}</td>
+          <td class="p-3 font-mono text-xs text-amber-400">${item.code}</td>
+          <td class="p-3 text-xs text-slate-400">${item.game}</td>
+          <td class="p-3 text-right">
+            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="inline-block text-xs px-3 py-1.5 rounded-lg accent-btn">Claim</a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      updateProgress();
+    }
+
+    // Init
+    window.onload = () => {
+      calculateEV();
+      renderTable();
+    };
+  </script>
+</body>
+</html>
